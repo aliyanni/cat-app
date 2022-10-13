@@ -1,23 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react";
+import "./App.css";
 
 function App() {
+  const [cats, setCats] = useState([]);
+
+  useEffect(() => {
+    async function loadCat() {
+      const response = await fetch(
+        "https://api.thecatapi.com/v1/images/search?limit=25"
+      );
+      const catsFromAPI = await response.json();
+      setCats(catsFromAPI);
+    }
+    loadCat();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h2>Cats</h2>
+      <ul>
+        {cats.map((cat) => (
+          <li key={cat.id}>
+            <img src={cat.url} alt="Random cat."></img>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
